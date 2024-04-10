@@ -31,16 +31,17 @@ export default function Home() {
     fetchCompanies();
   }, []);
 
+  async function submitHandler() {}
   return (
     <>
       <div className="flex justify-center text-4xl font-semibold p-4">
         ETS HWLC Form
       </div>
-      <div className="flex justify-around items-center">
-        <div className="border-2 rounded-xl p-2">
-          <div className="flex justify-center items-center">
-            <label className="text-xl font-semibold">Company</label>
-            <select className="select rounded-md mx-4 text-lg border-2 text-black">
+      <div className="flex justify-center p-2">
+        <div className="border-2 rounded-xl p-4">
+          <div className="flex flex-col text-center">
+            <label className="text-xl font-semibold mb-1">Company</label>
+            <select className="select rounded-md mx-auto text-lg border-2 text-center text-black">
               <option hidden value="">
                 Select a company
               </option>
@@ -154,7 +155,10 @@ export default function Home() {
             </div>
           </div>
           <div className="text-center p-4">
-            <button className="border-2 border-gray-400 rounded-lg p-1 bg-gray-400 font-bold">
+            <button
+              className="border-2 border-gray-400 rounded-lg p-1 bg-gray-400 font-bold"
+              onClick={submitHandler}
+            >
               Submit
             </button>
           </div>
