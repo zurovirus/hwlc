@@ -23,10 +23,10 @@ model UserForm {
   company             Company  @relation(fields: [companyId], references: [id])
   companyId           Int    
   apps                Apps[]
-  extraApps           String
+  extraApps           String?
   assetTag            String
   deviceSerialNumber  String
-  notes               String    
+  notes               String?    
 }
 
 model Company {
