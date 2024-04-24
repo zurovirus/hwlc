@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 const schema = Yup.object({
   company: Yup.string().required("Company is required"),
@@ -25,6 +27,7 @@ const schema = Yup.object({
 export default function Home() {
   const [companies, setCompanies] = useState([]);
   const [apps, setApps] = useState([]);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -32,18 +35,6 @@ export default function Home() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const onSubmit = async (data) => {
-    const formData = await fetch("/api/userForm", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    if (formData.ok) {
-      console.log("Data Submitted!");
-    }
-  };
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -72,14 +63,36 @@ export default function Home() {
     fetchCompanies();
   }, []);
 
+  const onSubmit = async (data) => {
+    const formData = await fetch("/api/userForm/create", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (formData.ok) {
+      console.log("Data Submitted!");
+      router.push("/submission");
+    }
+  };
+
   return (
     <>
-      <div className="flex justify-center text-4xl font-semibold p-4">
-        ETS HWLC Form
+      <div className="flex justify-center">
+        <Image
+          src="/images/ETS_Logo.png"
+          alt="ETS Logo"
+          width={250}
+          height={250}
+          className="rounded-full my-2"
+        />
+      </div>
+      <div className="flex justify-center text-3xl font-bold mb-2 text-white">
+        HWLC Form
       </div>
       <div className="flex justify-center mx-auto p-2">
         <form
-          className="border-2 rounded-xl p-4"
+          className="border-2 rounded-xl p-4 bg-white"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col text-center">
@@ -279,7 +292,7 @@ export default function Home() {
           </div>
           <div className="text-center p-4">
             <button
-              className="border-2 border-gray-400 rounded-lg p-1 bg-gray-400 font-bold"
+              className="border-2 border-gray-400 rounded-lg p-2 px-3 bg-gray-200 font-bold"
               type="submit"
             >
               Submit
