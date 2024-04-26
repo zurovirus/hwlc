@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Office 365" },
     update: {},
     create: {
@@ -10,7 +10,7 @@ async function main() {
     },
   });
 
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Microsoft Teams" },
     update: {},
     create: {
@@ -18,7 +18,7 @@ async function main() {
     },
   });
 
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Adobe Acrobat Pro" },
     update: {},
     create: {
@@ -26,7 +26,7 @@ async function main() {
     },
   });
 
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Citrix" },
     update: {},
     create: {
@@ -34,7 +34,7 @@ async function main() {
     },
   });
 
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Great Plains" },
     update: {},
     create: {
@@ -42,11 +42,99 @@ async function main() {
     },
   });
 
-  await prisma.apps.upsert({
+  await prisma.app.upsert({
     where: { appName: "Power BI" },
     update: {},
     create: {
       appName: "Power BI",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Wired Mouse" },
+    update: {},
+    create: {
+      peripheralName: "Wired Mouse",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Wired Keyboard" },
+    update: {},
+    create: {
+      peripheralName: "Wired Keyboard",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Wireless Mouse/Keyboard" },
+    update: {},
+    create: {
+      peripheralName: "Wireless Mouse/Keyboard",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Telephone" },
+    update: {},
+    create: {
+      peripheralName: "Telephone",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Webcam" },
+    update: {},
+    create: {
+      peripheralName: "Webcam",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Headset" },
+    update: {},
+    create: {
+      peripheralName: "Headset",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Speakers" },
+    update: {},
+    create: {
+      peripheralName: "Speakers",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Microphone" },
+    update: {},
+    create: {
+      peripheralName: "Microphone",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Docking Station" },
+    update: {},
+    create: {
+      peripheralName: "Docking Station",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Bag Tag Printer" },
+    update: {},
+    create: {
+      peripheralName: "Bag Tag Printer",
+    },
+  });
+
+  await prisma.peripheral.upsert({
+    where: { peripheralName: "Ticket Printer" },
+    update: {},
+    create: {
+      peripheralName: "Ticket Printer",
     },
   });
 

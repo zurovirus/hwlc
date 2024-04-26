@@ -19,7 +19,11 @@ const schema = Yup.object({
     .required("Confirm password is required"),
   deviceTag: Yup.string().required("Tag is required"),
   deviceSerial: Yup.string().required("Serial number is required"),
-  selectedApps: Yup.array().of(Yup.string()).optional(),
+  monitors: Yup.number().required("Monitors are required"),
+  printer: Yup.string().optional(),
+  selectedPeripherals: Yup.array().min(1, "Select at least 1 item"),
+  otherPeripherals: Yup.string().optional(),
+  selectedApps: Yup.array().min(1, "Select at least 1 item"),
   otherApps: Yup.string().optional(),
   notes: Yup.string().optional(),
 }).required();
@@ -27,6 +31,7 @@ const schema = Yup.object({
 export default function Home() {
   const [companies, setCompanies] = useState([]);
   const [apps, setApps] = useState([]);
+  const [peripherals, setPeripherals] = useState([]);
   const router = useRouter();
   const {
     register,
@@ -35,6 +40,7 @@ export default function Home() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const monitorOptions = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -59,10 +65,23 @@ export default function Home() {
       setApps(results);
     };
 
+    const fetchPeripherals = async () => {
+      const peripheralData = await fetch("/api/peripherals", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const results = await peripheralData.json();
+      setPeripherals(results);
+    };
+
+    fetchPeripherals();
     fetchApps();
     fetchCompanies();
   }, []);
 
+  console.log(errors);
   const onSubmit = async (data) => {
     const formData = await fetch("/api/userForm/create", {
       method: "POST",
@@ -92,7 +111,7 @@ export default function Home() {
       </div>
       <div className="flex justify-center mx-auto p-2">
         <form
-          className="border-2 rounded-xl p-4 bg-white"
+          className="rounded-xl p-4 bg-white"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col text-center">
@@ -116,7 +135,7 @@ export default function Home() {
               {errors.company?.message}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-6">
             <div className="flex flex-col mx-4">
               <label className="text-xl font-semibold my-1">First Name</label>
               <input
@@ -216,7 +235,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-col mx-4">
-              <label className="text-xl font-semibold my-1">Device Tag</label>
+              <label className="text-xl font-semibold my-1">PC Tag #</label>
               <input
                 type="text"
                 id="deviceTag"
@@ -232,9 +251,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-col mx-4">
-              <label className="text-xl font-semibold my-1">
-                Device Serial Number
-              </label>
+              <label className="text-xl font-semibold my-1">PC Serial #</label>
               <input
                 type="text"
                 id="deviceSerial"
@@ -249,9 +266,83 @@ export default function Home() {
                 {errors.deviceSerial?.message}
               </div>
             </div>
+            <div className="flex flex-col mx-4">
+              <label className="text-xl font-semibold my-1">
+                # of Monitors
+              </label>
+              <select
+                id="monitors"
+                name="monitors"
+                {...register("monitors")}
+                className={`p-1 border-2 rounded-lg ${
+                  errors.monitors && "border-red-700"
+                }`}
+                defaultValue={1}
+              >
+                {monitorOptions.map((options) => (
+                  <option key={options} value={options}>
+                    {options}
+                  </option>
+                ))}
+              </select>
+              <div className="text-error sm:text-sm text-red-700 mx-1">
+                {errors.monitors?.message}
+              </div>
+            </div>
+            <div className="flex flex-col mx-4">
+              <label className="text-xl font-semibold my-1">Printer name</label>
+              <input
+                type="text"
+                id="printer"
+                name="printer"
+                {...register("printer")}
+                className={`p-1 border-2 rounded-lg ${
+                  errors.printer && "border-red-700"
+                }`}
+                placeholder="HP Laserjet MP2055dn"
+              />
+              <div className="text-error sm:text-sm text-red-700 mx-1">
+                {errors.printer?.message}
+              </div>
+            </div>
+          </div>
+          <div className="mx-10">
+            <label className="text-xl font-semibold">Peripherals </label>
+            <p className="mx-2 mt-2"> Select at least 1 item</p>
+            <div className="grid grid-cols-2 gap-6 my-4">
+              {peripherals.map(({ id, peripheralName }) => (
+                <div key={id} className="flex items-center mx-6">
+                  <input
+                    type="checkbox"
+                    defaultChecked={false}
+                    value={id}
+                    {...register("selectedPeripherals")}
+                    className="mr-2"
+                  />
+                  {peripheralName}
+                </div>
+              ))}
+            </div>
+            <div className="text-error sm:text-sm text-red-700 mx-1">
+              {errors.selectedPeripherals?.message}
+            </div>
+          </div>
+          <div className="flex flex-col mx-10 my-4">
+            <label className="text-xl font-semibold my-1">
+              Other Peripherals
+            </label>
+            <input
+              type="text"
+              id="otherPeripherals"
+              name="otherPeripherals"
+              {...register("otherPeripherals")}
+              className="p-1 border-2 rounded-lg"
+              placeholder="Hand Scanner..."
+            />
           </div>
           <div className="mx-10">
             <label className="text-xl font-semibold">Apps Needed</label>
+            <p className="mx-2 mt-2"> Select at least 1 item</p>
             <div className="grid grid-cols-2 gap-6 my-4">
               {apps.map(({ id, appName }) => (
                 <div key={id} className="flex items-center mx-6">
@@ -285,7 +376,7 @@ export default function Home() {
                 name="notes"
                 {...register("notes")}
                 rows="5"
-                cols="55"
+                cols="87"
                 className="p-1 border-2 rounded-lg mt-2 block w-full"
               ></textarea>
             </div>

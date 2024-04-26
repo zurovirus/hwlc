@@ -23,7 +23,11 @@ model UserForm {
   password            String
   company             Company  @relation(fields: [companyId], references: [id])
   companyId           Int    
-  apps                Apps[]
+  apps                App[]
+  printer             String?
+  monitors            Int
+  peripherals         Peripheral[]
+  extraPeripherals    String?
   extraApps           String?
   assetTag            String
   deviceSerialNumber  String
@@ -36,7 +40,13 @@ model Company {
   userForms           UserForm[]
 }
 
-model Apps {
+model Peripheral{
+id                    Int @id @default(autoincrement())
+peripheralName        String @unique
+UserForm              UserForm[]
+}
+
+model App {
   id                  Int @id @default(autoincrement())
   appName             String @unique
   UserForm            UserForm[]

@@ -5,8 +5,20 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     console.log(req.body);
     const hashedPassword = await hashPassword(req.body.password);
-    const appData = req.body.selectedApps.map((app) => parseInt(app));
-    console.log(appData);
+
+    if (!req.body.selectedApps[0]) {
+      const appData = [];
+    } else {
+      const appData = req.body.selectedApps.map((app) => parseInt(app));
+    }
+
+    if (!req.body.selectedPeripherals[0]) {
+      const peripheralData = [];
+    } else {
+      const peripheralData = req.body.selectedPeripherals.map((peripheral) =>
+        parseInt(peripheral)
+      );
+    }
 
     const userData = await prisma.userForm.create({
       data: {
@@ -19,11 +31,17 @@ export default async function handler(req, res) {
         deviceSerialNumber: req.body.deviceSerial,
         extraApps: req.body.otherApps,
         notes: req.body.notes,
+        monitors: req.body.monitors,
+        extraPeripherals: req.body.otherPeripherals,
+        printer: req.body.printer,
         company: {
           connect: { id: parseInt(req.body.company) },
         },
         apps: {
           connect: appData.map((id) => ({ id })),
+        },
+        peripherals: {
+          connect: peripheralData.map((id) => ({ id })),
         },
       },
     });
