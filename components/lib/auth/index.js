@@ -1,4 +1,5 @@
 import { compare, hash } from "bcryptjs";
+import NodeRSA from "node-rsa";
 
 export async function hashPassword(password) {
   const hashedPassword = await hash(password, 12);
@@ -8,4 +9,20 @@ export async function hashPassword(password) {
 export async function verifyPassword(password, hashedPassword) {
   const isValid = await compare(password, hashedPassword);
   return isValid;
+}
+
+export function encryptPassword(password) {
+  const publicKeyString = process.env.PUBLIC_KEY;
+  const publicKey = new NodeRSA(publicKeyString);
+  const encrypted = publicKey.encrypt(password, "base64");
+
+  return encrypted;
+}
+
+export function decryptPassword(password) {
+  const privateKeyString = process.env.PRIVATE_KEY;
+  const privateKey = new NodeRSA(privateKeyString);
+  const decrypted = privateKey.decrypt(password, "utf8");
+
+  return decrypted;
 }

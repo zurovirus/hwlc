@@ -1,10 +1,9 @@
 import { prisma } from "@/components/lib/prisma";
-import { hashPassword } from "@/components/lib/auth";
+import { encryptPassword, decryptPassword } from "@/components/lib/auth";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    console.log(req.body);
-    const hashedPassword = await hashPassword(req.body.password);
+    const encryptedPassword = encryptPassword(req.body.password);
     const peripheralData = req.body.selectedPeripherals.map((peripheral) =>
       parseInt(peripheral)
     );
@@ -16,7 +15,7 @@ export default async function handler(req, res) {
         lastName: req.body.lastName,
         userName: req.body.username,
         email: req.body.email,
-        password: hashedPassword,
+        password: encryptedPassword,
         assetTag: req.body.deviceTag,
         deviceSerialNumber: req.body.deviceSerial,
         extraApps: req.body.otherApps,
@@ -35,6 +34,7 @@ export default async function handler(req, res) {
         },
       },
     });
+
     return res.status(200).json(userData);
   } else {
     return res.status(500);

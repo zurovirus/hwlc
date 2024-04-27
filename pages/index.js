@@ -33,7 +33,7 @@ export default function Home() {
   const [peripherals, setPeripherals] = useState([]);
   const [userPeripherals, setUserPeripherals] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -42,7 +42,6 @@ export default function Home() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
   const monitorOptions = [1, 2, 3, 4, 5];
 
   useEffect(() => {
@@ -114,6 +113,7 @@ export default function Home() {
   };
 
   const onSubmit = async (data) => {
+    setError(false);
     setIsSubmitting((prevState) => !prevState);
     const dataToSubmit = {
       ...data,
@@ -133,6 +133,7 @@ export default function Home() {
       router.push("/success");
     } else {
       setIsSubmitting((prevState) => !prevState);
+      setError(true);
     }
   };
 
