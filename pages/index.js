@@ -21,9 +21,7 @@ const schema = Yup.object({
   deviceSerial: Yup.string().required("Serial number is required"),
   monitors: Yup.number().required("Monitors are required"),
   printer: Yup.string().optional(),
-  selectedPeripherals: Yup.array().min(1, "Select at least 1 item"),
   otherPeripherals: Yup.string().optional(),
-  selectedApps: Yup.array().min(1, "Select at least 1 item"),
   otherApps: Yup.string().optional(),
   notes: Yup.string().optional(),
 }).required();
@@ -31,7 +29,11 @@ const schema = Yup.object({
 export default function Home() {
   const [companies, setCompanies] = useState([]);
   const [apps, setApps] = useState([]);
+  const [userApps, setUserApps] = useState([]);
   const [peripherals, setPeripherals] = useState([]);
+  const [userPeripherals, setUserPeripherals] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(true);
   const router = useRouter();
   const {
     register,
@@ -40,6 +42,7 @@ export default function Home() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const monitorOptions = [1, 2, 3, 4, 5];
 
   useEffect(() => {
@@ -81,22 +84,72 @@ export default function Home() {
     fetchCompanies();
   }, []);
 
-  console.log(errors);
+  const checkboxHandler = (table, value) => {
+    if (table == "peripherals") {
+      if (userPeripherals.includes(value)) {
+        setUserPeripherals((previousPeripherals) => {
+          return previousPeripherals.filter(
+            (peripheral) => peripheral !== value
+          );
+        });
+      } else {
+        setUserPeripherals((previousPeripherals) => [
+          ...previousPeripherals,
+          value,
+        ]);
+      }
+    } else {
+      if (userApps.includes(value)) {
+        setUserApps((previousApps) => {
+          return previousApps.filter((app) => app !== value);
+        });
+      } else {
+        setUserApps((previousApps) => [...previousApps, value]);
+      }
+    }
+  };
+
+  const errorHandler = () => {
+    setError((prevState) => !prevState);
+  };
+
   const onSubmit = async (data) => {
+    setIsSubmitting((prevState) => !prevState);
+    const dataToSubmit = {
+      ...data,
+      selectedPeripherals: userPeripherals,
+      selectedApps: userApps,
+    };
+
     const formData = await fetch("/api/userForm/create", {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(dataToSubmit),
     });
 
     if (formData.ok) {
+      setIsSubmitting((prevState) => !prevState);
       console.log("Data Submitted!");
-      router.push("/submission");
+      router.push("/success");
+    } else {
+      setIsSubmitting((prevState) => !prevState);
     }
   };
 
   return (
     <>
+      {error && (
+        <div className="flex justify-between font-semibold mb-4 items-center bg-red-600 rounded-lg text-white">
+          <p className="mx-auto ">An error has occurred... Try again later.</p>
+          <button
+            autoFocus
+            onClick={errorHandler}
+            className="mx-3 font-bold -mt-1 text-center hover:text-black hover:font-bold"
+          >
+            x
+          </button>
+        </div>
+      )}
       <div className="flex justify-center">
         <Image
           src="/images/ETS_Logo.png"
@@ -106,14 +159,14 @@ export default function Home() {
           className="rounded-full my-2"
         />
       </div>
-      <div className="flex justify-center text-3xl font-bold mb-2 text-white">
-        HWLC Form
-      </div>
       <div className="flex justify-center mx-auto p-2">
         <form
-          className="rounded-xl p-4 bg-white"
+          className="rounded-xl p-4 mb-2 bg-white"
           onSubmit={handleSubmit(onSubmit)}
         >
+          <div className="flex justify-center text-4xl font-bold p-2">
+            Hardware Lifecycle Form
+          </div>
           <div className="flex flex-col text-center">
             <label className="text-xl font-semibold mb-1">Company</label>
             <select
@@ -135,7 +188,7 @@ export default function Home() {
               {errors.company?.message}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-6">
             <div className="flex flex-col mx-4">
               <label className="text-xl font-semibold my-1">First Name</label>
               <input
@@ -308,16 +361,15 @@ export default function Home() {
           </div>
           <div className="mx-10">
             <label className="text-xl font-semibold">Peripherals </label>
-            <p className="mx-2 mt-2"> Select at least 1 item</p>
-            <div className="grid grid-cols-2 gap-6 my-4">
+            <p className="mx-2 mt-2"> Select all that apply</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-4">
               {peripherals.map(({ id, peripheralName }) => (
                 <div key={id} className="flex items-center mx-6">
                   <input
                     type="checkbox"
-                    defaultChecked={false}
                     value={id}
-                    {...register("selectedPeripherals")}
                     className="mr-2"
+                    onClick={() => checkboxHandler("peripherals", id)}
                   />
                   {peripheralName}
                 </div>
@@ -342,14 +394,14 @@ export default function Home() {
           </div>
           <div className="mx-10">
             <label className="text-xl font-semibold">Apps Needed</label>
-            <p className="mx-2 mt-2"> Select at least 1 item</p>
-            <div className="grid grid-cols-2 gap-6 my-4">
+            <p className="mx-2 mt-2"> Select all that apply</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-4">
               {apps.map(({ id, appName }) => (
                 <div key={id} className="flex items-center mx-6">
                   <input
                     type="checkbox"
                     value={id}
-                    {...register("selectedApps")}
+                    onClick={() => checkboxHandler("apps", id)}
                     className="mr-2"
                   />
                   {appName}
@@ -377,16 +429,17 @@ export default function Home() {
                 {...register("notes")}
                 rows="5"
                 cols="87"
-                className="p-1 border-2 rounded-lg mt-2 block w-full"
-              ></textarea>
+                className="p-1 border-2 rounded-lg mt-2 block"
+              />
             </div>
           </div>
-          <div className="text-center p-4">
+          <div className="text-center p-4 -mb-4">
             <button
               className="border-2 border-gray-400 rounded-lg p-2 px-3 bg-gray-200 font-bold"
               type="submit"
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

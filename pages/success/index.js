@@ -12,11 +12,11 @@ export default function Submission() {
           className="rounded-full my-2"
         />
       </div>
-      <div className="flex justify-center text-3xl font-bold mb-2 text-white">
-        HWLC Form
-      </div>
-      <div className="text-center m-4 bg-white rounded-lg p-2">
-        <p className="text-4xl p-4">Thank you!</p>
+      <div className="text-center m-4 bg-white rounded-lg p-4">
+        <div className="flex justify-center text-4xl font-bold p-2">
+          Hardware Lifecycle Form
+        </div>
+        <p className="text-3xl p-4">Thank you!</p>
         <p className="text-2xl p-4">
           Your form has been to the Provisioning team
         </p>

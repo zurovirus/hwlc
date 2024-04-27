@@ -5,20 +5,10 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     console.log(req.body);
     const hashedPassword = await hashPassword(req.body.password);
-
-    if (!req.body.selectedApps[0]) {
-      const appData = [];
-    } else {
-      const appData = req.body.selectedApps.map((app) => parseInt(app));
-    }
-
-    if (!req.body.selectedPeripherals[0]) {
-      const peripheralData = [];
-    } else {
-      const peripheralData = req.body.selectedPeripherals.map((peripheral) =>
-        parseInt(peripheral)
-      );
-    }
+    const peripheralData = req.body.selectedPeripherals.map((peripheral) =>
+      parseInt(peripheral)
+    );
+    const appData = req.body.selectedApps.map((app) => parseInt(app));
 
     const userData = await prisma.userForm.create({
       data: {
