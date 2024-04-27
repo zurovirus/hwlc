@@ -21,8 +21,10 @@ export function encryptPassword(password) {
 
 export function decryptPassword(password) {
   const privateKeyString = process.env.PRIVATE_KEY;
+  console.log(privateKeyString);
   const privateKey = new NodeRSA(privateKeyString);
   const decrypted = privateKey.decrypt(password, "utf8");
 
+  console.log(decrypted);
   return decrypted;
 }

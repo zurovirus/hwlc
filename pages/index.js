@@ -165,11 +165,11 @@ export default function Home() {
           className="rounded-xl p-4 mb-2 bg-white"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex justify-center text-4xl font-bold p-2">
+          <div className="flex justify-center text-4xl font-bold p-2 pb-4">
             Hardware Lifecycle Form
           </div>
-          <div className="flex flex-col text-center">
-            <label className="text-xl font-semibold mb-1">Company</label>
+          <div className="flex flex-col text-center mt-4">
+            <label className="text-2xl font-semibold mb-1">Company</label>
             <select
               className="select rounded-md mx-auto text-lg border-2 text-center"
               id="company"
@@ -189,7 +189,7 @@ export default function Home() {
               {errors.company?.message}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-4">
             <div className="flex flex-col mx-4">
               <label className="text-xl font-semibold my-1">First Name</label>
               <input
