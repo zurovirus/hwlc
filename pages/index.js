@@ -171,7 +171,7 @@ export default function Home() {
           <div className="flex flex-col text-center">
             <label className="text-xl font-semibold mb-1">Company</label>
             <select
-              className="select rounded-md mx-auto text-lg border-2 text-center text-black"
+              className="select rounded-md mx-auto text-lg border-2 text-center"
               id="company"
               name="company"
               {...register("company")}
