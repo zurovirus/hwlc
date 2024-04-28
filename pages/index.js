@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -82,7 +82,6 @@ export default function Home() {
     fetchApps();
     fetchCompanies();
   }, []);
-
   const checkboxHandler = (table, value) => {
     if (table == "peripherals") {
       if (userPeripherals.includes(value)) {
@@ -162,16 +161,18 @@ export default function Home() {
       </div>
       <div className="flex justify-center mx-auto p-2">
         <form
-          className="rounded-xl p-4 mb-2 bg-white"
+          className="rounded-xl p-4 mb-2 bg-white w-full max-w-4xl"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex justify-center text-4xl font-bold p-2 pb-4">
+          <div className="flex justify-center text-3xl sm:text-4xl font-bold p-2 pb-4">
             Hardware Lifecycle Form
           </div>
           <div className="flex flex-col text-center mt-4">
-            <label className="text-2xl font-semibold mb-1">Company</label>
+            <label className="text-xl sm:text-2xl font-semibold mb-1">
+              Company
+            </label>
             <select
-              className="select rounded-md mx-auto text-lg border-2 text-center"
+              className="select rounded-md mx-auto w-full max-w-xs sm:max-w-sm border-2"
               id="company"
               name="company"
               {...register("company")}
@@ -185,24 +186,26 @@ export default function Home() {
                 </option>
               ))}
             </select>
-            <div className="text-error sm:text-sm text-red-700 mx-1">
+            <div className="text-red-700 text-xs sm:text-sm mx-1">
               {errors.company?.message}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-4">
+          <div className="grid grid-cols-1 gap-2 p-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex flex-col mx-4">
-              <label className="text-xl font-semibold my-1">First Name</label>
+              <label className="text-lg sm:text-xl font-semibold my-1">
+                First Name
+              </label>
               <input
                 type="text"
                 id="firstName"
                 name="firstName"
                 {...register("firstName")}
-                className={`p-1 border-2 rounded-lg ${
+                className={`p-1 border-2 rounded-lg w-full ${
                   errors.firstName && "border-red-700"
                 }`}
                 placeholder="Jane"
               />
-              <div className="text-error sm:text-sm text-red-700 mx-1">
+              <div className="text-red-700 text-xs sm:text-sm mx-1">
                 {errors.firstName?.message}
               </div>
             </div>
@@ -429,8 +432,8 @@ export default function Home() {
                 name="notes"
                 {...register("notes")}
                 rows="5"
-                cols="87"
-                className="p-1 border-2 rounded-lg mt-2 block"
+                cols="102"
+                className="p-1 border-2 rounded-lg mt-2 block w-full resize-none"
               />
             </div>
           </div>
