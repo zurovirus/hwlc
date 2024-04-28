@@ -18,9 +18,9 @@ export default function Submission() {
         </div>
         <p className="text-3xl p-4">Thank you!</p>
         <p className="text-2xl p-4">
-          Your form has been to the Provisioning team
+          Your form has been sent to the provisioning team.
         </p>
-        <p className="text-xl p-4 pb-8">You can now close this window</p>
+        <p className="text-xl p-4 pb-8">You can now close this window.</p>
       </div>
     </>
   );
