@@ -168,11 +168,11 @@ export default function Home() {
             Hardware Lifecycle Form
           </div>
           <div className="flex flex-col text-center mt-4">
-            <label className="text-xl sm:text-2xl font-semibold mb-1">
+            <label className="text-xl sm:text-2xl font-semibold mb-1 ">
               Company
             </label>
             <select
-              className="select rounded-md mx-auto w-full max-w-xs sm:max-w-sm border-2"
+              className="select rounded-md mx-auto max-w-xs sm:max-w-sm border-2 text-center"
               id="company"
               name="company"
               {...register("company")}
