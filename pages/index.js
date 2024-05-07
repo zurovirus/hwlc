@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
+// Form validation
 const schema = Yup.object({
   company: Yup.string().required("Company is required"),
   firstName: Yup.string().required("First name is required"),
@@ -26,6 +27,7 @@ const schema = Yup.object({
   notes: Yup.string().optional(),
 }).required();
 
+// The index page of the webpage.
 export default function Home() {
   const [companies, setCompanies] = useState([]);
   const [apps, setApps] = useState([]);
@@ -44,6 +46,7 @@ export default function Home() {
   });
   const monitorOptions = [1, 2, 3, 4, 5];
 
+  // Fetches the companies, apps and peripherals and populates the select/checkboxes.
   useEffect(() => {
     const fetchCompanies = async () => {
       const companyData = await fetch("/api/company", {
@@ -82,8 +85,11 @@ export default function Home() {
     fetchApps();
     fetchCompanies();
   }, []);
+
+  // Handles the checkbox action and adds the value of the checked item to their hook.
   const checkboxHandler = (table, value) => {
     if (table == "peripherals") {
+      // If the value is included, filter the value and remove it from the hook.
       if (userPeripherals.includes(value)) {
         setUserPeripherals((previousPeripherals) => {
           return previousPeripherals.filter(
@@ -91,12 +97,14 @@ export default function Home() {
           );
         });
       } else {
+        // Adds the value to the hook.
         setUserPeripherals((previousPeripherals) => [
           ...previousPeripherals,
           value,
         ]);
       }
     } else {
+      // If the value is included, filter the value and remove it from the hook.
       if (userApps.includes(value)) {
         setUserApps((previousApps) => {
           return previousApps.filter((app) => app !== value);
@@ -107,10 +115,12 @@ export default function Home() {
     }
   };
 
+  // Swaps the state of the submission errors.
   const errorHandler = () => {
     setError((prevState) => !prevState);
   };
 
+  // Handles the submit form event.
   const onSubmit = async (data) => {
     setError(false);
     setIsSubmitting((prevState) => !prevState);
@@ -126,6 +136,7 @@ export default function Home() {
       body: JSON.stringify(dataToSubmit),
     });
 
+    // If the response is good, redirects to the success page, else displays an error at the top of the page.
     if (formData.ok) {
       setIsSubmitting((prevState) => !prevState);
       console.log("Data Submitted!");
